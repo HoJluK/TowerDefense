@@ -7,6 +7,8 @@ public class Turret : MonoBehaviour
 {
 
     private Transform target;
+    private Enemy targetEnemy;
+    
     [Header("General")]
     [SerializeField]
     private float range = 15f;
@@ -22,6 +24,10 @@ public class Turret : MonoBehaviour
     [SerializeField]
     private bool useLazer = false;
     [SerializeField]
+    private int damageOverTime = 30;
+    [SerializeField]
+    private float slowAmount = .5f;
+    [SerializeField]
     private LineRenderer lineRenderer;
     [SerializeField]
     private ParticleSystem impactEffect;
@@ -35,7 +41,6 @@ public class Turret : MonoBehaviour
     private Transform partToRotate;
     [SerializeField]
     private float turnSpeed = 10f;
-    
     [SerializeField]
     private Transform firePoint;
 
@@ -63,6 +68,7 @@ public class Turret : MonoBehaviour
         if (nearestEnemy != null && shortestDistance <= range)
         {
             target = nearestEnemy.transform;
+            targetEnemy = nearestEnemy.GetComponent<Enemy>();
         }
         else
         {
@@ -117,6 +123,9 @@ public class Turret : MonoBehaviour
 
     private void Lazer()
     {
+        targetEnemy.GetComponent<Enemy>().TakeDamage(damageOverTime * Time.deltaTime);
+        targetEnemy.Slow(slowAmount);
+
         if (!lineRenderer.enabled)  
         {
             lineRenderer.enabled = true;
