@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private bool doMovement = true;
+    
     public float panspeed = 30f;
     public float panBorderThickness = 10f;
     public float scrollspeed = 5f;
@@ -10,10 +10,11 @@ public class CameraController : MonoBehaviour
     public float maxY = 80f;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            doMovement = !doMovement;
-        if (!doMovement)
+        if (GameManager.GameIsOver)
+        {
+            this.enabled = false;
             return;
+        }
 
         if (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panBorderThickness)
         {
