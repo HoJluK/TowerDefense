@@ -5,14 +5,17 @@ using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
+
+    public static int EnemyiesAlive = 0;
+
     [SerializeField]
-    private Transform enemyPrefab;
+    private Wave[] waves;
 
     [SerializeField]
     private Transform spawnPoint;
 
     [SerializeField]
-    private float timeBetweenWaves = 5f;
+    private float timeBetweenWaves = 2f;
 
     
     public Text waveCountdownText;
@@ -21,14 +24,26 @@ public class WaveSpawner : MonoBehaviour
 
     private int waveIndex = 0;
 
-
+    public GameManager gameManager;
 
      void Update()
     {
+        if (EnemyiesAlive>0)
+        {
+            return;
+        }
+        
+        if (waveIndex == waves.Length)
+        {
+            gameManager.WinLevel();
+            this.enabled = false;
+        }
+
         if (countdown <= 0f)
         {
             StartCoroutine(SpawnWave());
             countdown = timeBetweenWaves;
+            return;
         }
         
         countdown -= Time.deltaTime;
@@ -41,18 +56,25 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        waveIndex++;
+        
+        PlayerStats.Rounds++;
 
-        for (int i = 0; i < waveIndex; i++)
+        Wave wave = waves[waveIndex];
+
+        EnemyiesAlive = wave.count;
+
+        for (int i = 0; i < wave.count; i++)
         {
-            SpawnEnemy();
-            yield return new WaitForSeconds(0.5f);
+            SpawnEnemy(wave.enemy);
+            yield return new WaitForSeconds(1f/ wave.rate);
         }
-    
+        
+        waveIndex++;
+        
     }
 
-    private void SpawnEnemy()
+    private void SpawnEnemy(GameObject enemy)
     {
-        Instantiate(enemyPrefab,spawnPoint.position, spawnPoint.rotation);
+        Instantiate(enemy,spawnPoint.position, spawnPoint.rotation);       
     }
 }

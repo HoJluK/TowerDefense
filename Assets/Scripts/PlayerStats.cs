@@ -12,11 +12,14 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private int startLives = 20;
 
+    public static int Rounds;
 
      void Start()
     {
         Lives = startLives;
-        Money = startMoney;    
+        Money = startMoney;
+
+        Rounds = 0;
     }
     
 

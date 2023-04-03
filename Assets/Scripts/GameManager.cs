@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private bool gameEnded = false;
+    public static bool GameIsOver;
 
-     void Update()
+    public GameObject gameOverUI;
+    public GameObject completeLevelUI;
+
+     void Start()
     {
-        if (gameEnded)
+        GameIsOver = false;
+    }
+
+    void Update()
+    {
+        if (GameIsOver)
         {
             return;
         }
@@ -19,9 +27,16 @@ public class GameManager : MonoBehaviour
     }
     void EndGame()
     {
-        gameEnded = true;
+        GameIsOver = true;
 
-        Debug.Log("Game Over!");
+        gameOverUI.SetActive(true);
 
     }
+
+    public void WinLevel()
+    {
+        GameIsOver = true;
+        completeLevelUI.SetActive(true);
+    }
+
 }
